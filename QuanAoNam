@@ -1,0 +1,20 @@
+package qlykhoquanao;
+
+import java.io.Serializable;
+import java.sql.Date;
+public class QuanAoNam extends QuanAo implements Serializable {
+    public QuanAoNam(String Loai,String Hang,String Style,String size, String chatlieu, String mausac,String Ma, Date Ngaynhap) {
+        super(Loai,Hang,Style,size, chatlieu, mausac,Ma, Ngaynhap);
+    }
+   
+	public QuanAoNam() {
+	}
+	public QuanAoNam(String Loai,String Hang,String style, String size, String chatlieu, String mausac, String ma, java.util.Date parse) {
+	}
+
+	@Override
+    public String toString(){
+		return "QuanAoNam[Loai="+Loai+",Hang="+Hang+",Style="+Style+",size="+Size+",  mausac="+Mausac+", Chatlieu="+Chatlieu+", Ma="+Ma+", Ngaynhap=" + Ngaynhap + "]";
+	}
+  
+	}
