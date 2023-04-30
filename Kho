@@ -1,0 +1,171 @@
+package qlykhoquanao;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Kho {
+	private ArrayList<QuanAo> list = new ArrayList<>();
+	private ArrayList<QuanAo> kho;
+    public Kho() {
+        kho = new ArrayList<>();
+        list = new ArrayList<>();
+    }
+    public boolean themDoNam(QuanAo nam) {
+        for (QuanAo n : kho) {
+            if (n.getMa().equals(n.getMa())) {
+                System.out.println("Ma đa ton tai trong kho");
+                return false;
+            }
+        }
+        kho.add(nam);
+        System.out.println("Them quan thanh cong");
+        return true;
+    }
+    public boolean themDoNu(QuanAo nu){
+        for (QuanAo w : kho) {
+            if (w.getMa().equals(w.getMa())) {
+                System.out.println("Ma da ton tai trong kho");
+                return false;
+            }
+        }
+        kho.add(nu);
+        System.out.println("Them ao thanh cong");
+        return true;
+    }
+    public void xuatSanPham() {
+    	  System.out.println("Danh sach san pham:");
+          for (int i = 0; i < kho.size(); i++) {
+              System.out.println(kho.get(i));
+          }
+    }
+    public void xoaSanPham() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ma san pham can xoa: ");
+        String Ma=sc.nextLine();
+        for (int i = 0; i < kho.size(); i++) {
+            if (kho.get(i).getMa().equals(Ma)) {
+                kho.remove(i);
+                System.out.println("San pham co ma " + Ma + " da duoc xoa.");
+                return;
+            }
+        }
+        System.out.println("Khong tim thay san pham co ma " + Ma);
+    }
+
+    public void suaSanPham() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ma san pham can sua: ");        
+        String ma = sc.nextLine();
+        for (int i = 0; i < kho.size(); i++) {
+            if (kho.get(i).getMa().equals(ma)) {
+                System.out.println("Nhap thong tin moi cho san pham:");
+                kho.get(i).nhapthongtin();
+                System.out.println("San pham co ma " + ma + " da duoc sua.");
+                return;
+            }
+        }
+        System.out.println("Khong tim thay san pham co ma " + ma);
+    }
+
+    public void kiemTraSoLuong() {
+    	 if (kho.isEmpty()) {
+             System.out.println("Kho khong co san pham.");
+             return;
+         }
+         System.out.println("Tong so san pham trong kho la: " + kho.size());
+     }
+    public void timKiemSanPham() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ma san pham can tim kiem: ");
+        String Ma=sc.nextLine();
+        for (int i = 0; i < kho.size(); i++) {
+            if (kho.get(i).getMa().equals(Ma)) {
+                System.out.println(kho.get(i));
+                return;
+            }
+        }
+        System.out.println("Khong tim thay san pham co ma " + Ma);
+    }   
+    public void luuFile(File f) {
+        try {
+            FileWriter fw = new FileWriter(f);
+            for (QuanAo qa : kho) {
+                if (qa instanceof QuanAoNam) {
+                    QuanAoNam nam = (QuanAoNam) qa;
+                    fw.write("DoNam,"+nam.getLoai()+","+nam.getHang()+"," +nam.getStyle() +"," + nam.getMa() + "," + nam.getMausac() + "," + nam.getSize() + "," + nam.getChatlieu() +","+nam.getNgaynhap() +"\n");
+                } else if (qa instanceof QuanAoNu) {
+                    QuanAoNu nu = (QuanAoNu) qa;
+                    fw.write("DoNu,"+nu.getLoai()+","+nu.getHang()+"," +nu.getStyle() +"," + nu.getMa() + "," + nu.getMausac() + "," + nu.getSize() + "," + nu.getChatlieu() +","+nu.getNgaynhap()+"\n");
+                }
+            }
+            System.out.println("da ghi file vao " + f.getAbsolutePath());
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void docFile(File f) {
+        try {
+            Scanner sc = new Scanner(f);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String[] fields = line.split(",");
+                if (fields.length == 9) {
+                    if (fields[0].equals("nam")) {
+                        QuanAoNam nam = new QuanAoNam(fields[1], fields[2], fields[3], fields[4], fields[5],fields[6] ,fields[7], dateFormat.parse(fields[8]));
+                        themDoNam(nam);
+                    } else if (fields[0].equals("")) {
+                        QuanAoNu nu = new QuanAoNu(fields[1], fields[2], fields[3], fields[4], fields[5],fields[6] ,fields[7], dateFormat.parse(fields[8]));
+                        themDoNu(nu);
+                    }
+                } else {
+                    System.out.println("Dong khong hop le: " + line);
+                }
+            }
+            System.out.println("Da doc file " + f.getAbsolutePath());
+            sc.close();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void xuatThongTin(File f) {
+        try {
+            Scanner sc = new Scanner(f);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            while (sc.hasNextLine()) {
+                String[] fields = sc.nextLine().split(",");
+                if (fields.length == 9) {
+                    String SP = fields[0];
+                    String Loai= fields[1];
+                    String Hang = fields[2];
+                    String style = fields[3];
+                    String ma = fields[4];
+                    String mausac = fields[5];
+                    String size = fields[6];
+                    String chatlieu = fields[7];
+                    Date ngaynhap = new java.sql.Date(dateFormat.parse(fields[8]).getTime());
+                    System.out.printf("SP: %s,Loai: %s, Hang: %s, Style: %s, Ma: %s, Mau sac: %s, Size: %s, Chat lieu: %s, Ngay nhap: %s\n", SP,Loai,Hang, style, ma, mausac, size, chatlieu, dateFormat.format(ngaynhap));
+                }
+            }
+            sc.close();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    }
