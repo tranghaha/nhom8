@@ -1,0 +1,17 @@
+package qlykhoquanao;
+
+import java.io.Serializable;
+import java.sql.Date;
+public class QuanAoNu extends QuanAo implements Serializable {
+	 public QuanAoNu(String Loai,String Hang,String Style,String size, String chatlieu, String mausac, String ma, Date Ngaynhap) {
+	        super(Loai,Hang,Style,size, chatlieu, mausac, ma, Ngaynhap);
+	    }
+	 public QuanAoNu() {
+	 }
+		public QuanAoNu(String Loai,String Hang,String style, String size, String chatlieu, String mausac, String ma, java.util.Date parse) {		
+		}
+		@Override
+	    public String toString() {
+	        return "QuanAoNu [Loai="+Loai+",Hang="+Hang+",Style="+Style+",Size=" + Size + ", Chatlieu=" + Chatlieu + ", Mausac=" + Mausac + ", Ngaynhap=" + Ngaynhap + "]";
+	    }
+}
